@@ -1,0 +1,168 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ong1"
+        xmlns:ONGModel="clr-namespace:ONGModel;assembly=ONGModel" x:Class="ong1.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="sediuViewSource" d:DesignSource="{d:DesignInstance {x:Type ONGModel:Sediu}, CreateList=True}"/>
+        <CollectionViewSource x:Key="evenimentViewSource" d:DesignSource="{d:DesignInstance {x:Type ONGModel:Eveniment}, CreateList=True}"/>
+        <CollectionViewSource x:Key="sponsorViewSource" d:DesignSource="{d:DesignInstance {x:Type ONGModel:Sponsor}, CreateList=True}"/>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
+                <AdornedElementPlaceholder/>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+ Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+ Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="-2,0,212,0" DataContext="{StaticResource sediuViewSource}">
+
+        <TabControl x:Name="tbCtrlong1" HorizontalAlignment="Left" Height="334" Margin="82,41,0,0" VerticalAlignment="Top" Width="500" SelectedIndex="{Binding Mode=OneWay, Source={StaticResource evenimentViewSource}}" RenderTransformOrigin="1.194,0.865" SelectionChanged="tbCtrlong1_SelectionChanged">
+            <TabItem Header="Sedius" Height="24" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource sediuViewSource}" Margin="0,3,0,-15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="53*"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="416*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="sediuDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="85,23,23,179" RowDetailsVisibilityMode="VisibleWhenSelected" Grid.Column="3">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="adresaColumn" Binding="{Binding Adresa}" Header="Adresa" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="idSediuColumn" Binding="{Binding IdSediu}" Header="Id Sediu" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid2" DataContext="{StaticResource sediuViewSource}" HorizontalAlignment="Left" Margin="85,219,0,0" VerticalAlignment="Top" Grid.Column="3" Width="214" Height="68">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Adresa:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="adresaTextBox1" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding Adresa, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Id Sediu:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="idSediuTextBox1" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding IdSediu, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                    </Grid>
+
+                    <Button x:Name="btnNew" Content="New" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="75" Click="btnNew_Click" Grid.ColumnSpan="4"/>
+                    <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="4"/>
+                    <Button x:Name="btnDelete" Content="Delete" HorizontalAlignment="Left" Margin="10,107,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="4"/>
+                    <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="10,192,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="4"/>
+                    <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Left" Margin="10,238,0,0" VerticalAlignment="Top" Width="75" Grid.ColumnSpan="4"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Eveniments" Height="22" VerticalAlignment="Bottom">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource evenimentViewSource}">
+                    <DataGrid x:Name="evenimentDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource evenimentViewSource}}" Margin="173,137,22,176" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn x:Name="dataColumn" Header="Data" Width="SizeToHeader">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding Data, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn x:Name="idEvenimentColumn" Binding="{Binding IdEveniment}" Header="Id Eveniment" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="idSediuColumn1" Binding="{Binding IdSediu}" Header="Id Sediu" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="invitatColumn" Binding="{Binding Invitat}" Header="Invitat" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Sponsors">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource sponsorViewSource}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54*"/>
+                        <ColumnDefinition Width="22*"/>
+                        <ColumnDefinition Width="63*"/>
+                        <ColumnDefinition Width="355*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="sponsorDataGrid" AutoGenerateColumns="False" Grid.Column="3" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource sponsorViewSource}}" Margin="64,22,49,175" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="adresaColumn1" Binding="{Binding Adresa}" Header="Adresa" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="idSponsorColumn" Binding="{Binding IdSponsor}" Header="Id Sponsor" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="numeColumn" Binding="{Binding Nume}" Header="Nume" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="sumaColumn" Binding="{Binding Suma}" Header="Suma" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid1" Grid.Column="3" DataContext="{StaticResource sponsorViewSource}" HorizontalAlignment="Left" Margin="84,154,0,0" VerticalAlignment="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Adresa:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="adresaTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding Adresa, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Id Sponsor:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="idSponsorTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding IdSponsor, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" IsEnabled="False"/>
+                        <Label Content="Nume:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="numeTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" Text="{Binding Nume, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Suma:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                        <TextBox x:Name="sumaTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="3" Text="{Binding Suma, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                    </Grid>
+                    <Button Grid.ColumnSpan="3" Content="New" HorizontalAlignment="Left" Margin="19,25,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Button Grid.ColumnSpan="3" Content="Edit" HorizontalAlignment="Left" Margin="19,68,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Button Grid.ColumnSpan="3" Content="Delete" HorizontalAlignment="Left" Margin="19,114,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Button Grid.ColumnSpan="3" Content="Save" HorizontalAlignment="Left" Margin="19,191,0,0" VerticalAlignment="Top" Width="75"/>
+                    <Button Grid.ColumnSpan="3" Content="Cancel" HorizontalAlignment="Left" Margin="19,232,0,0" VerticalAlignment="Top" Width="75"/>
+
+                </Grid>
+            </TabItem>
+            <DataGrid x:Name="evenimentDataGrid_Copy" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" RowDetailsVisibilityMode="VisibleWhenSelected" Height="200" Width="400">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="dataColumn1" Header="Data" Width="SizeToHeader">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding Data, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn x:Name="idEvenimentColumn1" Binding="{Binding IdEveniment}" Header="Id Eveniment" Width="SizeToHeader"/>
+                    <DataGridTextColumn x:Name="idSediuColumn2" Binding="{Binding IdSediu}" Header="Id Sediu" Width="SizeToHeader"/>
+                    <DataGridTextColumn x:Name="invitatColumn1" Binding="{Binding Invitat}" Header="Invitat" Width="SizeToHeader"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+        </TabControl>
+        <DataGrid x:Name="evenimentDataGrid1" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding Source={StaticResource evenimentViewSource}}" Margin="151,142,31,137" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="evenimentDataGrid1_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn x:Name="dataColumn2" Header="Data" Width="SizeToHeader">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding Data, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="idEvenimentColumn2" Binding="{Binding IdEveniment}" Header="Id Eveniment" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="idSediuColumn3" Binding="{Binding IdSediu}" Header="Id Sediu" Width="SizeToHeader"/>
+                <DataGridTextColumn x:Name="invitatColumn2" Binding="{Binding Invitat}" Header="Invitat" Width="SizeToHeader"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+
+
+
+
+    </Grid>
+</Window>
